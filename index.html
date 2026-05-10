@@ -354,6 +354,34 @@ function switchTab(idx) {
   document.querySelectorAll('.section').forEach((s, i) => s.classList.toggle('active', i === idx));
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
+
+// Save checkbox state to localStorage
+function saveState() {
+  const state = {};
+  document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+    state['cb_' + i] = cb.checked;
+  });
+  try { localStorage.setItem('latitud40s_kit', JSON.stringify(state)); } catch(e) {}
+}
+
+// Restore checkbox state from localStorage
+function restoreState() {
+  try {
+    const saved = localStorage.getItem('latitud40s_kit');
+    if (!saved) return;
+    const state = JSON.parse(saved);
+    document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+      if (state['cb_' + i]) cb.checked = true;
+    });
+  } catch(e) {}
+}
+
+// Attach save listener to all checkboxes
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', saveState);
+});
+
+restoreState();
 </script>
 </body>
 </html>
